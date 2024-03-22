@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Station" Id="{4cffd1f8-e639-4cf1-8a94-e4412d1f6cef}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Station IMPLEMENTS ITF_Observable
+VAR
+	//ITF_Observable
+	_Observers : ARRAY[1..2] OF ITF_Observer;
+	_data	   : INT;
+	prevData   : int;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="ITF_Observable" Id="{9faa726e-db41-4250-8f83-4ccb89e66920}" />
+    <Method Name="CyclicLogic" Id="{cf9a7094-bb19-4360-84cc-e74e74e0a599}">
+      <Declaration><![CDATA[METHOD CyclicLogic : BOOL
+VAR
+	dataChanged : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Monitor for change in data
+IF data <> prevData THEN
+	dataChanged := TRUE;
+	prevData	:= Data;
+END_IF
+
+IF dataChanged THEN
+	notifyObserver();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Data" Id="{137e3308-f419-4042-ae43-8222a8c628ab}">
+      <Declaration><![CDATA[PROPERTY Data : int]]></Declaration>
+      <Get Name="Get" Id="{63e77196-2361-45b1-8016-9b1810594e3b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Data := _data;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{73859c97-6c63-4604-94d8-4981cf36c3d5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_data := Data;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="notifyObserver" Id="{5d01aa5d-a9ba-4807-b8f3-63e54734db00}" FolderPath="ITF_Observable\">
+      <Declaration><![CDATA[METHOD notifyObserver : BOOL
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i := 1 TO 2 DO
+	IF _Observers[i] <> 0 THEN
+		_Observers[i].update(THIS^); //Call the update method of the observer and pass a reference to the Observable
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="registerObserver" Id="{91468315-02a6-45bd-8a0e-94aeb2586c3a}" FolderPath="ITF_Observable\">
+      <Declaration><![CDATA[METHOD registerObserver : BOOL
+VAR_INPUT
+	Observer : ITF_Observer;
+END_VAR
+
+VAR
+	i : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Find the first available array location and store a reference to the Observer there
+FOR i := 1 TO 2 DO
+	IF _Observers[i] = 0 THEN
+		_Observers[i] := Observer;
+		Observer.ID	  := i; //Send the location within the array back to the Observer, so it can pass the ID back when removing itself
+		EXIT;
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="removeObserver" Id="{a3e6cb8e-a898-47c8-849c-012e0d5d387d}" FolderPath="ITF_Observable\">
+      <Declaration><![CDATA[METHOD removeObserver : BOOL
+VAR_INPUT
+	Observer : ITF_Observer;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Check for valid reference
+IF Observer <> 0 AND _Observers[Observer.ID] <> 0 THEN
+	_Observers[Observer.ID] := 0; //Clear the array position
+	Observer.ID				:= 0; //send back a 0 so the Observer knows it is no longer Observing
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Station">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Station.CyclicLogic">
+      <LineId Id="31" Count="7" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Station.Data.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Station.Data.Set">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Station.notifyObserver">
+      <LineId Id="18" Count="3" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Station.registerObserver">
+      <LineId Id="54" Count="6" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Station.removeObserver">
+      <LineId Id="65" Count="3" />
+      <LineId Id="45" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

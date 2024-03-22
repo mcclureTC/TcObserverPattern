@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <Itf Name="ITF_Observer" Id="{5a0a5a3e-cd09-42bf-a75a-19820151c3a1}">
+    <Declaration><![CDATA[INTERFACE ITF_Observer
+]]></Declaration>
+    <Property Name="ID" Id="{629996f4-d3e8-4b77-b1eb-72f9d16b994b}">
+      <Declaration><![CDATA[PROPERTY ID : udint]]></Declaration>
+      <Get Name="Get" Id="{80963415-adf6-4d17-8e8e-29b3a8537fd7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{c1245ae3-5b0e-439c-95de-620929205529}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="update" Id="{60239a47-187d-4a1c-ad05-245ee77b08a1}">
+      <Declaration><![CDATA[METHOD update : BOOL
+VAR_INPUT
+	Station : REFERENCE TO FB_Station;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

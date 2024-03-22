@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Display" Id="{c38be1ce-6876-4ccb-9de3-5bab7019eeb4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Display IMPLEMENTS ITF_Observer
+VAR
+	data : INT; //updated from the Observable
+	_ID	 : udint; //set by the Observable
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="ITF_Observer" Id="{fcd202ed-2f65-495c-8a88-96ce17698f1a}" />
+    <Method Name="CyclicLogic" Id="{8448c9a2-d7c2-48a0-8215-62dd23a0a229}">
+      <Declaration><![CDATA[METHOD CyclicLogic : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="ID" Id="{ab153b6e-3229-4478-97b7-d3ef9a95b506}" FolderPath="ITF_Observer\">
+      <Declaration><![CDATA[PROPERTY ID : udint]]></Declaration>
+      <Get Name="Get" Id="{efb636fa-abc1-48b8-93ba-bfa504f73b3e}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ID := _ID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{62312570-e819-4d42-9bc5-fbf0a42d00fc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ID := ID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="update" Id="{9c98bc60-509f-478e-89e7-5a747d53d700}" FolderPath="ITF_Observer\">
+      <Declaration><![CDATA[METHOD update : BOOL
+VAR_INPUT
+	Station : REFERENCE TO FB_Station;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[data := Station.Data; //Read what you want from the Observable4]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Display">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Display.CyclicLogic">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Display.ID.Get">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Display.ID.Set">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Display.update">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

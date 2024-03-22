@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{39582499-09cf-4305-9138-4ae498e563de}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	Initialized : BOOL;
+	Station		: FB_Station;
+	Display1	: FB_Display;
+	Display2	: FB_Display;
+	data		: INT;
+	add1		: BOOL;
+	add2		: BOOL;
+	remove1		: BOOL;
+	remove2		: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//add Observers to Observable on startup
+IF NOT Initialized THEN
+	Station.registerObserver(Display1);
+	Station.registerObserver(Display2);
+	Initialized := TRUE;
+END_IF
+
+//remove observer
+IF remove1 THEN
+	remove1 := FALSE;
+	Station.removeObserver(Display1);
+END_IF
+
+IF remove2 THEN
+	remove2 := FALSE;
+	Station.removeObserver(Display2);
+END_IF
+
+//add observer
+IF add1 THEN
+	add1 := FALSE;
+	Station.registerObserver(Display1);
+END_IF
+
+IF add2 THEN
+	add2 := FALSE;
+	Station.registerObserver(Display2);
+END_IF
+
+//update code in all FBs
+Station.CyclicLogic();
+Display1.CyclicLogic();
+Display2.CyclicLogic();
+
+//Change this value for testing
+Station.Data := data;]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="190" Count="34" />
+      <LineId Id="39" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
